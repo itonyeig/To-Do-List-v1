@@ -6,11 +6,12 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname +'/public'));
+
 let items = ['buy food','buy drink'];
+let workItems = [];
 
 app.get('/', function (req, res){
     let today = new Date();
-    let currentDay = today.getDay();
     let day = "";
     let options = {
         weekday: 'long',
@@ -21,7 +22,14 @@ app.get('/', function (req, res){
     day = today.toLocaleDateString("en-US", options);
 
 
-    app.post('/', function(req, res){
+    res.render('list', {
+        listTittle: day,
+        newListItems: items
+    });
+});
+
+app.post('/', function(req, res){
+    console.log(req.body);
         let item = req.body.newItem;
         // Stops the user from posting an empty string
         item = item.trimStart()
@@ -31,11 +39,19 @@ app.get('/', function (req, res){
         console.log(items);
         res.redirect('/');
     });
-    res.render('list', {
-        kindOfDay: day,
-        newListItems: items
+
+app.get('/work', function(req, res){
+    res.render('list',{
+        listTittle: 'Work List',
+        newListItems: workItems
     });
 });
+
+app.post('/work', function (req, res){
+    let item = req.body.newItem
+    workItems.push(item);
+    res.redirect('/work');
+})
 
 
 app.listen(3000, function(){
