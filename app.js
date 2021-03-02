@@ -23,7 +23,11 @@ app.get('/', function (req, res){
 
     app.post('/', function(req, res){
         let item = req.body.newItem;
-        items.push(item);
+        // Stops the user from posting an empty string
+        item = item.trimStart()
+        if (item !== ""){
+            items.push(item);
+        }
         console.log(items);
         res.redirect('/');
     });
