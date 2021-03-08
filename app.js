@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const date = require(__dirname + '/date.js');
 
 const app = express();
 
@@ -7,21 +8,11 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname +'/public'));
 
-let items = ['buy food','buy drink'];
-let workItems = [];
+const items = [];
+const workItems = [];
 
 app.get('/', function (req, res){
-    let today = new Date();
-    let day = "";
-    let options = {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long'
-    };
-    console.log(today.toLocaleDateString("en-US", options));
-    day = today.toLocaleDateString("en-US", options);
-
-
+    let day = date.getDate();
     res.render('list', {
         listTittle: day,
         newListItems: items
@@ -29,7 +20,7 @@ app.get('/', function (req, res){
 });
 
 app.post('/', function(req, res){
-    console.log(req.body);
+    // console.log(req.body);
         let item = req.body.newItem;
 
         if (req.body.list === 'Work') {
@@ -37,7 +28,6 @@ app.post('/', function(req, res){
             if (item !== ""){
                 workItems.push(item);
             }
-            
             res.redirect('/work');
         } else {
             // Stops the user from posting an empty string
@@ -45,12 +35,9 @@ app.post('/', function(req, res){
             if (item !== ""){
                 items.push(item);
             }
-            console.log(items);
+            // console.log(items);
             res.redirect('/');
         }
-
-        
-        
     });
 
 app.get('/work', function(req, res){
@@ -63,7 +50,6 @@ app.get('/work', function(req, res){
 app.get('/about', function(req, res){
     res.render('about');
 });
-
 
 app.listen(3000, function(){
     console.log('Server is running on port 3000');
