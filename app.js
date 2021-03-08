@@ -31,13 +31,26 @@ app.get('/', function (req, res){
 app.post('/', function(req, res){
     console.log(req.body);
         let item = req.body.newItem;
-        // Stops the user from posting an empty string
-        item = item.trimStart()
-        if (item !== ""){
-            items.push(item);
+
+        if (req.body.list === 'Work') {
+            item = item.trimStart()
+            if (item !== ""){
+                workItems.push(item);
+            }
+            
+            res.redirect('/work');
+        } else {
+            // Stops the user from posting an empty string
+            item = item.trimStart()
+            if (item !== ""){
+                items.push(item);
+            }
+            console.log(items);
+            res.redirect('/');
         }
-        console.log(items);
-        res.redirect('/');
+
+        
+        
     });
 
 app.get('/work', function(req, res){
@@ -47,13 +60,13 @@ app.get('/work', function(req, res){
     });
 });
 
-app.post('/work', function (req, res){
-    let item = req.body.newItem
-    workItems.push(item);
-    res.redirect('/work');
-})
+app.get('/about', function(req, res){
+    res.render('about');
+});
 
 
 app.listen(3000, function(){
     console.log('Server is running on port 3000');
 })
+
+//branch2
